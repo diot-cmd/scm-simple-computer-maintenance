@@ -99,7 +99,7 @@
 
     <section class="about section-wrap" id="about"><div class="about-mark" aria-hidden="true"><div class="about-orbit"></div><span>SCM</span><small>Simple Computer<br>Maintenance</small></div><div class="about-copy"><p class="eyebrow">A LITTLE ABOUT SCM</p><h2>Tech help, with a<br><span>human on your side.</span></h2><p>SCM is here to make everyday PC maintenance feel less intimidating. We explain what we’re doing, why it matters, and keep you involved throughout your remote session.</p><div class="about-points"><span><i>✓</i> Live, guided support</span><span><i>✓</i> Clear explanations</span><span><i>✓</i> You stay in control</span></div></div></section>
 
-    <section class="language-section" aria-label="Language selection">
+    <section class="language-section" aria-label="Language selection" data-no-translate>
       <p class="eyebrow">LANGUAGE / LANGUE</p>
       <button class="language-toggle" id="language-toggle" type="button" aria-pressed="false">SCM en français</button>
       <p class="language-note" id="language-note">Consultez le site en français.</p>
@@ -109,6 +109,21 @@
   </main>
 
   <footer class="site-footer"><a class="brand footer-brand" href="#top"><span class="brand-mark">SCM</span><span class="brand-name">Simple Computer<br>Maintenance</span></a><p>Less computer clutter. More peace of mind.</p><a href="https://www.facebook.com/share/14rsJDavFLt/" target="_blank" rel="noopener noreferrer">Contact &amp; scheduling <span aria-hidden="true">↗</span></a><span class="copyright">© <span id="year"></span> SCM</span></footer>
+  <div id="scm-chatbot" class="scm-chatbot" data-no-translate>
+    <button class="chat-launcher" type="button" aria-expanded="false" aria-controls="chat-panel">
+      <span class="clara-avatar" aria-hidden="true"><span class="avatar-hair"></span><span class="avatar-face"><i class="avatar-eye"></i><i class="avatar-smile"></i></span><span class="avatar-body"><i class="avatar-collar"></i></span><span class="avatar-bow"></span></span>
+      <span class="chat-launcher-label">Chat with Clara</span><span class="chat-launcher-dot" aria-hidden="true"></span>
+    </button>
+    <section class="chat-panel" id="chat-panel" aria-label="SCM chat assistant" hidden>
+      <header class="chat-header"><span class="clara-avatar clara-avatar-small" aria-hidden="true"><span class="avatar-hair"></span><span class="avatar-face"><i class="avatar-eye"></i><i class="avatar-smile"></i></span><span class="avatar-body"><i class="avatar-collar"></i></span><span class="avatar-bow"></span></span><div class="chat-heading"><strong class="chat-title">Clara · SCM assistant</strong><span class="chat-status">Here to help you find the right service.</span></div><button class="chat-close" type="button" aria-label="Close chat">×</button></header>
+      <div class="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+      <div class="chat-quick" aria-label="Suggested questions"></div>
+      <form class="chat-form"><label class="visually-hidden" for="chat-input">Your question</label><input class="chat-input" id="chat-input" type="text" maxlength="400" autocomplete="off" placeholder="Type a question…"><button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 17 8-17 8 3-8-3-8Zm3 8h14"/></svg></button></form>
+      <a class="chat-contact" href="https://www.facebook.com/share/14rsJDavFLt/" target="_blank" rel="noopener noreferrer">Talk with SCM on Facebook ↗</a>
+      <p class="chat-powered">Clara uses prepared answers and does not access your PC.</p>
+    </section>
+  </div>
   <script src="script.js" defer></script>
+  <script src="chatbot.js" defer></script>
 </body>
 </html>
