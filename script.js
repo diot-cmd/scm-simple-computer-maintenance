@@ -5,14 +5,15 @@ if (toggle && nav) {
   toggle.addEventListener('click', () => {
     const isOpen = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!isOpen));
-    toggle.setAttribute('aria-label', isOpen ? 'Open navigation' : 'Close navigation');
+    const french = document.documentElement.lang === 'fr';
+    toggle.setAttribute('aria-label', isOpen ? (french ? 'Ouvrir la navigation' : 'Open navigation') : (french ? 'Fermer la navigation' : 'Close navigation'));
     nav.classList.toggle('open', !isOpen);
   });
 
   nav.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Open navigation');
+      toggle.setAttribute('aria-label', document.documentElement.lang === 'fr' ? 'Ouvrir la navigation' : 'Open navigation');
       nav.classList.remove('open');
     });
   });
@@ -20,6 +21,8 @@ if (toggle && nav) {
 
 const translations = {
   'SCM home': 'Accueil SCM',
+  'Simple Computer': 'Entretien informatique',
+  'Maintenance': 'simple',
   'Open navigation': 'Ouvrir la navigation',
   'Close navigation': 'Fermer la navigation',
   'Main navigation': 'Navigation principale',
