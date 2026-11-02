@@ -13,7 +13,8 @@
       lab:'Try the Tech Lab for browser-only sample activities. It is a simulation and does not access or change your device.',
       service:'SCM offers clutter cleanup, Windows and driver updates, virus scans, startup optimization, performance tuning, and Ultimate Performance Mode activation. All support is remote and guided live.',
       unknown:'I can help with services, the complete package, pricing, remote sessions, and the Tech Lab. For a personal question, message SCM on Facebook.',
-      priceTerms:['price','pricing','cost','39.99','49.99','package'],how:['remote','live','session','appointment','book','schedule'],
+      contactAnswer:'Contact SCM directly here: https://www.facebook.com/share/1Qj5sVoqzE/',
+      priceTerms:['price','pricing','cost','39.99','49.99','package'],how:['remote','live','session','appointment','book','schedule'],contactTerms:['contact','get in touch','reach scm','talk to scm','message scm','speak with scm','facebook'],
       safetyTerms:['virus','virus scan','safe','security','malware','threat'],labTerms:['tech lab','demo','try','sample'],productTerms:['product','package','what do you offer','services','service','find'],
       serviceTerms:['clutter cleanup','windows and driver updates','startup optimization','performance tuning','ultimate performance mode'],
       topics:['price','remote','safety','lab','service','unknown']
@@ -31,7 +32,8 @@
       lab:'Essayez le Labo Tech pour des activités de démonstration dans le navigateur. La simulation n’accède pas à votre appareil et ne le modifie pas.',
       service:'SCM propose le nettoyage des fichiers inutiles, les mises à jour de Windows et des pilotes, les analyses antivirus, l’optimisation du démarrage et des performances, ainsi que l’activation du mode Performances ultimes. L’assistance se déroule à distance, en direct et avec votre participation.',
       unknown:'Je peux vous renseigner sur les services, la formule complète, les tarifs, l’assistance à distance et le Labo Tech. Pour une question personnelle, écrivez à SCM sur Facebook.',
-      priceTerms:['prix','tarif','coût','coûte','coute','combien','39,99','49,99','formule'],how:['distance','en direct','séance','rendez-vous','réserver','planifier'],
+      contactAnswer:'Contactez directement SCM ici : https://www.facebook.com/share/1Qj5sVoqzE/',
+      priceTerms:['prix','tarif','coût','coûte','coute','combien','39,99','49,99','formule'],how:['distance','en direct','séance','rendez-vous','réserver','planifier'],contactTerms:['contact','contacter','joindre','parler à scm','écrire à scm','facebook'],
       safetyTerms:['virus','antivirus','sécurité','maliciel','menace'],labTerms:['labo tech','démo','essayer','exemple'],productTerms:['produit','formule','services','service','proposez'],
       serviceTerms:['nettoyage','mise à jour','mises à jour','démarrage','performances','pilotes'],topics:['price','remote','safety','lab','service','unknown']
     }
@@ -48,10 +50,12 @@
     close.setAttribute('aria-label',w.close);panel.setAttribute('aria-label',w.panelLabel);
     root.querySelector('.chat-contact').textContent=w.contact;root.querySelector('.chat-powered').textContent=w.powered;quick.setAttribute('aria-label',w.suggestions);
     quick.replaceChildren(...w.quick.map(text=>{const b=document.createElement('button');b.type='button';b.className='chat-suggestion';b.textContent=text;b.addEventListener('click',()=>submit(text));return b;}));
-    log.querySelectorAll('.chat-bubble.assistant').forEach(b=>{if(b.dataset.topic)b.textContent=w[b.dataset.topic];});
+    log.querySelectorAll('.chat-bubble.assistant').forEach(b=>{if(b.dataset.topic)setBubbleContent(b,w[b.dataset.topic]);});
   }
-  function add(text,role,topic){const p=document.createElement('p');p.className=`chat-bubble ${role}`;p.textContent=text;if(topic)p.dataset.topic=topic;log.appendChild(p);log.scrollTop=log.scrollHeight;return p;}
+  function setBubbleContent(element,text){element.replaceChildren();const urls=/(https:\/\/[^\s]+)/g;let last=0,match;while((match=urls.exec(text))!==null){element.append(document.createTextNode(text.slice(last,match.index)));const link=document.createElement('a');link.href=match[0];link.textContent=match[0];link.target='_blank';link.rel='noopener noreferrer';link.className='chat-answer-link';element.append(link);last=match.index+match[0].length;}element.append(document.createTextNode(text.slice(last)));}
+  function add(text,role,topic){const p=document.createElement('p');p.className=`chat-bubble ${role}`;if(role==='assistant')setBubbleContent(p,text);else p.textContent=text;if(topic)p.dataset.topic=topic;log.appendChild(p);log.scrollTop=log.scrollHeight;return p;}
   function answer(text){const w=copy[language()],q=text.toLocaleLowerCase(language());
+    if(w.contactTerms.some(t=>q.includes(t)))return['contactAnswer',w.contactAnswer];
     if(w.priceTerms.some(t=>q.includes(t)))return['price',w.price];
     if(w.how.some(t=>q.includes(t)))return['remote',w.remote];
     if(w.safetyTerms.some(t=>q.includes(t)))return['safety',w.safety];
