@@ -87,4 +87,31 @@ function setLanguage(language){const french=language==='fr';document.documentEle
 if(languageToggle)languageToggle.addEventListener('click',()=>setLanguage(currentLanguage()==='fr'?'en':'fr'));
 Object.entries({temporary:.8,cache:.5,downloads:1.2}).forEach(([key,value])=>{const input=document.querySelector(`input[name="cleanup"][value="${key}"]`);if(input)input.dataset.gb=String(value);});
 renderLab();
+
+const newsGrid=document.querySelector('#news-grid');
+const newsStatus=document.querySelector('#news-status');
+const newsRefresh=document.querySelector('#news-refresh');
+const googleNewsRss='https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US%3Aen';
+const newsApi=new URL('https://api.rss2json.com/v1/api.json');
+newsApi.searchParams.set('rss_url',googleNewsRss);
+let isNewsLoading=false;
+function makeNewsCard(item){
+  const article=document.createElement('article');article.className='news-card';
+  const source=document.createElement('span');source.className='news-source';source.textContent=item.author||'TECH NEWS';
+  const title=document.createElement('h3');const link=document.createElement('a');link.href=item.link;link.target='_blank';link.rel='noopener noreferrer';link.textContent=item.title||'Read this technology story';title.append(link);
+  const footer=document.createElement('div');footer.className='news-card-footer';const date=document.createElement('time');const published=new Date(item.pubDate);
+  if(!Number.isNaN(published.getTime())){date.dateTime=published.toISOString();date.textContent=published.toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'});}else date.textContent='Latest headline';
+  const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';footer.append(date,arrow);article.append(source,title,footer);return article;
+}
+async function loadTechNews(){
+  if(!newsGrid||!newsStatus||isNewsLoading)return;
+  isNewsLoading=true;newsGrid.setAttribute('aria-busy','true');if(newsRefresh)newsRefresh.disabled=true;newsStatus.textContent='Refreshing the latest headlines…';
+  try{
+    const response=await fetch(newsApi,{headers:{Accept:'application/json'},cache:'no-store'});if(!response.ok)throw new Error(`News service returned ${response.status}`);
+    const data=await response.json();if(data.status!=='ok'||!Array.isArray(data.items)||data.items.length===0)throw new Error('The news feed returned no stories.');
+    newsGrid.replaceChildren(...data.items.slice(0,6).map(makeNewsCard));newsStatus.textContent=`Updated ${new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})} · refreshes every 5 minutes`;
+  }catch(error){newsStatus.textContent='Headlines could not load right now. Try again or browse Google News.';if(!newsGrid.querySelector('.news-card:not(.news-placeholder)'))newsGrid.replaceChildren();console.error('Unable to load Google News headlines:',error);}
+  finally{newsGrid.setAttribute('aria-busy','false');if(newsRefresh)newsRefresh.disabled=false;isNewsLoading=false;}
+}
+if(newsGrid){loadTechNews();if(newsRefresh)newsRefresh.addEventListener('click',loadTechNews);window.setInterval(loadTechNews,5*60*1000);}
 document.querySelector('#year').textContent=new Date().getFullYear();

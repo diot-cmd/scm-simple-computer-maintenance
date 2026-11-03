@@ -20,7 +20,7 @@
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation"><span></span><span></span></button>
     <nav id="primary-nav" class="primary-nav" aria-label="Main navigation">
-      <a href="#services">Services</a><a href="#tech-lab">Tech Lab</a><a href="#pricing">Pricing</a><a href="#process">How it works</a><a href="#about">About SCM</a>
+      <a href="#services">Services</a><a href="#tech-lab">Tech Lab</a><a href="#tech-news">Tech News</a><a href="#pricing">Pricing</a><a href="#process">How it works</a><a href="#about">About SCM</a>
       <a class="nav-cta" href="https://www.facebook.com/share/14rsJDavFLt/" target="_blank" rel="noopener noreferrer">Book a session <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
@@ -69,6 +69,19 @@
         <article class="lab-card lab-card-wide" data-lab-card="tuning"><div class="lab-card-top"><span class="lab-number">05</span><span class="lab-icon">⌁</span></div><h3>Performance tuning</h3><p>Explore a mock balance between visual effects and responsiveness.</p><div class="tuning-control"><label for="tuning-range"><span>Visual effects</span> <span id="tuning-value" data-no-translate>Balanced</span></label><input id="tuning-range" type="range" min="1" max="3" value="2"><div><span>Faster response</span><span>More effects</span></div></div><button class="lab-action" type="button" data-lab-action="tuning">Apply demo setting</button><p class="lab-result" id="lab-result-tuning" aria-live="polite" data-no-translate></p></article>
       </div>
       <p class="lab-disclaimer" data-no-translate>Tech Lab is a guided sample activity only. It never scans, updates, cleans, or changes your actual device.</p>
+    </section>
+
+    <section class="tech-news section-wrap" id="tech-news" aria-labelledby="tech-news-title" data-no-translate>
+      <div class="section-heading tech-news-heading">
+        <div><p class="eyebrow">THE LATEST IN TECH</p><h2 id="tech-news-title">Tech news. <span>Updated live.</span></h2></div>
+        <div class="news-controls"><p id="news-status" class="news-status" role="status" aria-live="polite">Loading the latest headlines…</p><button class="news-refresh" id="news-refresh" type="button">Refresh headlines <span aria-hidden="true">↻</span></button></div>
+      </div>
+      <div class="news-grid" id="news-grid" aria-live="polite" aria-busy="true">
+        <article class="news-card news-placeholder"><span class="news-source">GOOGLE NEWS</span><h3>Fetching the latest technology headlines…</h3></article>
+        <article class="news-card news-placeholder" aria-hidden="true"><span class="news-source">GOOGLE NEWS</span><h3>Fetching the latest technology headlines…</h3></article>
+        <article class="news-card news-placeholder" aria-hidden="true"><span class="news-source">GOOGLE NEWS</span><h3>Fetching the latest technology headlines…</h3></article>
+      </div>
+      <a class="news-more" href="https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&amp;gl=US&amp;ceid=US%3Aen" target="_blank" rel="noopener noreferrer">Browse all technology news on Google News <span aria-hidden="true">↗</span></a>
     </section>
 
     <section class="pricing section-wrap" id="pricing">
