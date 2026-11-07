@@ -101,29 +101,13 @@ const newsApi=new URL('https://api.rss2json.com/v1/api.json');
 function getNewsFeedUrl(){const french=currentLanguage()==='fr';const feed=new URL(`https://news.google.com/rss/topics/${googleNewsTopic}`);feed.searchParams.set('hl',french?'fr-FR':'en-US');feed.searchParams.set('gl',french?'FR':'US');feed.searchParams.set('ceid',french?'FR:fr':'US:en');return feed.toString();}
 let isNewsLoading=false;
 let newsReloadQueued=false;
-const newsImageCacheKey='scm-news-image-cache';
-const failedNewsImages=new Set();
-let newsImageLookupQueue=Promise.resolve();
-function isSafeHttpUrl(value){try{return ['http:','https:'].includes(new URL(value).protocol);}catch{return false;}}
-function readNewsImageCache(){try{return JSON.parse(localStorage.getItem(newsImageCacheKey)||'{}');}catch{return {};}}
-function cacheNewsImage(articleUrl,imageUrl){if(!isSafeHttpUrl(imageUrl))return;const cache=readNewsImageCache();cache[articleUrl]=imageUrl;try{localStorage.setItem(newsImageCacheKey,JSON.stringify(cache));}catch{}}
-async function findNewsImage(item){
-  if(isSafeHttpUrl(item.thumbnail))return item.thumbnail;
-  if(!isSafeHttpUrl(item.link)||failedNewsImages.has(item.link))return '';
-  const cached=readNewsImageCache()[item.link];if(cached)return cached;
-  try{const metadataUrl=new URL('https://api.microlink.io/');metadataUrl.searchParams.set('url',item.link);metadataUrl.searchParams.set('data','image.url');const response=await fetch(metadataUrl,{headers:{Accept:'application/json'}});if(!response.ok){failedNewsImages.add(item.link);return '';}const metadata=await response.json();const imageUrl=metadata.status==='success'?metadata.data?.image?.url:'';if(isSafeHttpUrl(imageUrl))return imageUrl;}catch(error){console.warn('Article preview image unavailable:',error);}failedNewsImages.add(item.link);return '';
-}
-function queueNewsImageLookup(item){const lookup=new Promise(resolve=>{newsImageLookupQueue=newsImageLookupQueue.then(async()=>{resolve(await findNewsImage(item));}).catch(()=>resolve(''));});return lookup;}
 function makeNewsCard(item){
   const article=document.createElement('article');article.className='news-card';
-  const image=document.createElement('img');image.className='news-image';image.alt='';image.loading='lazy';image.decoding='async';image.referrerPolicy='no-referrer';image.hidden=true;image.addEventListener('error',()=>{image.hidden=true;});article.append(image);
   const source=document.createElement('span');source.className='news-source';source.textContent=item.author|| (currentLanguage()==='fr'?'ACTUALITÉS TECH':'TECH NEWS');
   const title=document.createElement('h3');const link=document.createElement('a');link.href=item.link;link.target='_blank';link.rel='noopener noreferrer';link.textContent=item.title||'Read this technology story';title.append(link);
   const footer=document.createElement('div');footer.className='news-card-footer';const date=document.createElement('time');const published=new Date(item.pubDate);
   if(!Number.isNaN(published.getTime())){date.dateTime=published.toISOString();date.textContent=published.toLocaleString(currentLanguage()==='fr'?'fr-FR':'en-US',{dateStyle:'medium',timeStyle:'short'});}else date.textContent=currentLanguage()==='fr'?'Dernière actualité':'Latest headline';
-  const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';footer.append(date,arrow);article.append(source,title,footer);
-  queueNewsImageLookup(item).then(imageUrl=>{if(!imageUrl||!article.isConnected)return;cacheNewsImage(item.link,imageUrl);image.addEventListener('load',()=>{image.hidden=false;},{once:true});image.src=imageUrl;if(image.complete&&image.naturalWidth>0)image.hidden=false;});
-  return article;
+  const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent='↗';footer.append(date,arrow);article.append(source,title,footer);return article;
 }
 async function loadTechNews(){
   if(!newsGrid||!newsStatus||isNewsLoading)return;
